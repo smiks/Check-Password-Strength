@@ -7,7 +7,12 @@ function echo(text){
 	}
 }
 
+
 function evaluateSecurePassword(){
+	/* 
+		Function evaluates how secure is password. 
+		It returns score, higher the score, more secure is password.
+	*/
 
 	/* 500 most common passwords */
 	const common_passwords = [
@@ -179,6 +184,25 @@ function evaluateSecurePassword(){
 	return evaluateScore
 }
 
+
+function updateScore(score, password, firstname, lastname){
+	/*
+		Function updates score (decreases) if password contains
+		firstname or lastname or slightly increases if password does not 
+		contain firstname or lastname.
+	*/
+
+	var pattern = "(.*)?("+firstname+"|"+lastname+")(.*)?";
+    var re = new RegExp(pattern, "i");
+    var n = password.match(re);
+    if(n !== null){
+    	return Math.max(0, score-25);
+    }
+    return score+1;
+}
+
+
+
 var p0 = "password";
 var p1 = "mojegeslo";
 var p2 = "mediumWeak";
@@ -188,6 +212,12 @@ var p4 = "5tr0NG!#$%(";
 f = evaluateSecurePassword();
 
 res = f(p0)
+echo("pwd: '" + p0 + "' res: " + res);
+
+res = updateScore(f(p0), p0, "firstName", "lastName")
+echo("pwd: '" + p0 + "' res: " + res);
+
+res = updateScore(f(p0), p0, "pass", "word")
 echo("pwd: '" + p0 + "' res: " + res);
 
 res = f(p1)
